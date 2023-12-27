@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -41,8 +42,10 @@ import com.alphavn.todoapp.component.EmptyComponent
 import com.alphavn.todoapp.component.HeaderText
 import com.alphavn.todoapp.component.IconButton
 import com.alphavn.todoapp.component.InputSearch
+import com.alphavn.todoapp.component.RowItem
 import com.alphavn.todoapp.model.NavigationRoutes
 import com.alphavn.todoapp.screen.detail_screen.DetailActivity
+import com.alphavn.todoapp.screen.detail_screen.DetailViewModel
 import com.alphavn.todoapp.ui.theme.Black
 import com.alphavn.todoapp.ui.theme.TodoAppTheme
 import com.alphavn.todoapp.ui.theme.White
@@ -61,7 +64,12 @@ class HomeActivity : ComponentActivity() {
                             return HomeViewModel(navController = navController) as T
                         }
                     })
-//                homeViewModel.filterTodo()
+                val detailViewModel =
+                    viewModel<DetailViewModel>(factory = object : ViewModelProvider.Factory {
+                        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                            return DetailViewModel(navController = navController) as T
+                        }
+                    })
 
                 NavHost(
                     navController = navController,
@@ -104,7 +112,9 @@ fun HomeScreen() {
                     return@Scaffold
                 }
                 FloatingActionButton(
-                    onClick = { },
+                    onClick = {
+                              homeViewModel.goToNoteDetail(null)
+                    },
                     shape = CircleShape,
                     containerColor = Black,
                     elevation = FloatingActionButtonDefaults.elevation(
@@ -139,10 +149,13 @@ fun HomeScreen() {
                     val countList = homeViewModel.todoShowList.size
                     val isSearch = homeViewModel.isShowHeaderSearch
 
-//                    items(count = countList) { index ->
-//                        val item = homeViewModel.todoShowList[index]
-//                        RowItem(item = item)
-//                    }
+                    items(count = countList) { index ->
+                        val item = homeViewModel.todoShowList[index]
+                        RowItem(item = item,
+                            modifier = Modifier.clickable {
+                                homeViewModel.goToNoteDetail(item)
+                            })
+                    }
 
                     if (countList == 0) {
                         item() {

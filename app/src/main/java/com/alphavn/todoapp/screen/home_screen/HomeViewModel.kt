@@ -9,7 +9,7 @@ import com.alphavn.todoapp.model.NavigationRoutes
 import com.alphavn.todoapp.model.NoteModel
 
 class HomeViewModel(navController: NavController) : ViewModel() {
-    lateinit var navController: NavController;
+    private var navController: NavController;
     var isShowInfo by mutableStateOf(false)
     var isShowHeaderSearch by mutableStateOf(false)
     var valueInputSearch by mutableStateOf("")
@@ -25,8 +25,8 @@ class HomeViewModel(navController: NavController) : ViewModel() {
         // todoList = todoRepository
     }
 
-    fun goToNoteDetail(item: NoteModel) {
-        navController.navigate(NavigationRoutes.DetailScreen.name + "/${item.id}")
+    fun goToNoteDetail(item: NoteModel?) {
+        navController.navigate(NavigationRoutes.DetailScreen.name + "/${item?.id ?: ""}")
     }
 
     fun filterTodo() {
