@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -46,6 +47,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.alphavn.todoapp.R
+import com.alphavn.todoapp.component.AdmobWidget
 import com.alphavn.todoapp.component.DialogDetail
 import com.alphavn.todoapp.component.EmptyComponent
 import com.alphavn.todoapp.component.HeaderText
@@ -58,12 +60,26 @@ import com.alphavn.todoapp.ui.theme.Black
 import com.alphavn.todoapp.ui.theme.Red
 import com.alphavn.todoapp.ui.theme.TodoAppTheme
 import com.alphavn.todoapp.ui.theme.White
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.RequestConfiguration
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class HomeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        MobileAds.initialize(this) {}
+        MobileAds.setRequestConfiguration(
+            RequestConfiguration.Builder()
+                .setTestDeviceIds(
+                    listOf(
+                        AdRequest.DEVICE_ID_EMULATOR,
+                        "BB55DD4AA96D76191718C5446D74EC7"
+                    )
+                ).build()
+        )
+
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             TodoAppTheme {
@@ -131,6 +147,11 @@ fun HomeScreen(onClickItem: (String?) -> Unit) {
                         colorFilter = ColorFilter.tint(color = White)
                     )
                 }
+            },
+            bottomBar = {
+                AdmobWidget(
+                    modifier = Modifier.fillMaxWidth()
+                )
             },
             containerColor = Black,
         ) { innerPadding ->

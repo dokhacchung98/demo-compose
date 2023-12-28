@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.alphavn.todoapp.R
+import com.alphavn.todoapp.component.AdmobWidget
 import com.alphavn.todoapp.component.DialogDiscard
 import com.alphavn.todoapp.component.IconButton
 import com.alphavn.todoapp.model.ModeEnum
@@ -46,6 +47,11 @@ fun DetailActivity(idNote: String, onTapBack: () -> Unit) {
         Scaffold(
             topBar = {
                 HeaderDetail(onTapBack)
+            },
+            bottomBar = {
+                AdmobWidget(
+                    modifier = Modifier.fillMaxWidth()
+                )
             },
             containerColor = Black,
         ) { innerPadding ->
