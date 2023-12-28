@@ -1,13 +1,16 @@
 package com.alphavn.todoapp.model
 
-import java.util.Calendar
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
+@Entity(tableName = "notes")
 data class NoteModel(
-    val id: String,
-    val title: String,
-    val content: String,
-    val createAt: Calendar,
-    val updateAt: Calendar,
-    val status: NoteStatus,
-    val colorIndex: Int,
+    @PrimaryKey
+    var id: String,
+    var title: String,
+    var content: String,
+    var createAt: String,
+    var updateAt: String,
+    var status: Int,
+    var colorIndex: Int,
 )

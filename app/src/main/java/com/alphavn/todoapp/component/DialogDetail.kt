@@ -13,14 +13,14 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.alphavn.todoapp.screen.home_screen.HomeViewModel
 import com.alphavn.todoapp.ui.theme.BlackDark
 import com.alphavn.todoapp.ui.theme.White
 
 @Composable
 fun DialogDetail() {
-    val homeViewModel: HomeViewModel = viewModel()
+    val homeViewModel: HomeViewModel = hiltViewModel()
     if (!homeViewModel.isShowInfo) {
         return
     }
@@ -36,7 +36,7 @@ fun DialogDetail() {
                 )
         ) {
             Text(
-                "Designed by - \n" + "Redesigned by - \n" + "Illustrations - \n" + "Icons - \n" + "Font -\n",
+                "Designed by - figma.com\nCode by: KHACCHUNG-AlphaVN",
                 style = TextStyle(
                     fontSize = 15.sp,
                     color = White

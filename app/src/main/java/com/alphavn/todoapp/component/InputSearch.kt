@@ -37,7 +37,9 @@ fun InputSearch(
         value = valueInput,
         onValueChange = onValueChange,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-        modifier = modifier.padding(horizontal = 34.dp, vertical = 7.dp).fillMaxWidth(),
+        modifier = modifier
+            .padding(horizontal = 34.dp, vertical = 7.dp)
+            .fillMaxWidth(),
         shape = CircleShape,
         colors = TextFieldDefaults.colors(
             focusedContainerColor = GreyDark,

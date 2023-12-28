@@ -2,7 +2,10 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="GreetingPreview">
+      <entry key="AnimatedItem">
+        <State />
+      </entry>
+      <entry key="DialogDiscard">
         <State />
       </entry>
       <entry key="GreetingPreview (1)">
@@ -11,7 +14,7 @@
       <entry key="GreetingPreview (2)">
         <State />
       </entry>
-      <entry key="MyViewPreview">
+      <entry key="GreetingPreview (3)">
         <State />
       </entry>
       <entry key="app">

@@ -1,15 +1,22 @@
 package com.alphavn.todoapp.screen.home_screen
 
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavController
-import com.alphavn.todoapp.model.NavigationRoutes
+import androidx.lifecycle.viewModelScope
 import com.alphavn.todoapp.model.NoteModel
+import com.alphavn.todoapp.repository.TodoRepository
+import com.alphavn.todoapp.repository.TodoRepository.Companion.TAG
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HomeViewModel(navController: NavController) : ViewModel() {
-    private var navController: NavController;
+@HiltViewModel
+class HomeViewModel @Inject constructor(private val todoRepository: TodoRepository) : ViewModel() {
     var isShowInfo by mutableStateOf(false)
     var isShowHeaderSearch by mutableStateOf(false)
     var valueInputSearch by mutableStateOf("")
@@ -17,31 +24,46 @@ class HomeViewModel(navController: NavController) : ViewModel() {
     var todoShowList by mutableStateOf<List<NoteModel>>(emptyList())
 
     init {
-        this.navController = navController
+        getTodoList()
     }
 
-    fun getTodoList() {
-        // todo: get data
-        // todoList = todoRepository
+    private fun getTodoList() {
+        viewModelScope.launch {
+            val noteList = todoRepository.getListTodo()
+            todoList += noteList
+            filterTodo()
+        }
     }
 
-    fun goToNoteDetail(item: NoteModel?) {
-        navController.navigate(NavigationRoutes.DetailScreen.name + "/${item?.id ?: ""}")
+    fun deleteNote(noteModel: NoteModel) {
+        Log.e(TAG, "deleteNote ${noteModel.id}")
+        viewModelScope.launch {
+            todoRepository.deleteTodo(noteModel.id)
+            todoList = todoList.filter { it.id != noteModel.id }
+            filterTodo()
+        }
     }
 
-    fun filterTodo() {
+    private fun filterTodo() {
         val keyword = valueInputSearch.trim().lowercase()
+        Log.e(TAG, "filterTodo: $keyword")
         if (keyword.isEmpty() && isShowHeaderSearch) {
             todoShowList = emptyList()
             return
         }
         todoShowList = todoList.filter {
-            it.content.lowercase().contains(keyword)
+            it.title.lowercase().contains(keyword)
         }
     }
 
+    private val handler = Handler(Looper.getMainLooper())
+
     fun onSearchChange(value: String) {
         valueInputSearch = value
+        handler.removeCallbacksAndMessages(null)
+        handler.postDelayed({
+            filterTodo()
+        }, 500)
     }
 
     fun showInputSearch() {
@@ -50,6 +72,8 @@ class HomeViewModel(navController: NavController) : ViewModel() {
 
     fun closeInputSearch() {
         isShowHeaderSearch = false
+        valueInputSearch = ""
+        filterTodo()
     }
 
     fun openDialogDetail() {
@@ -58,5 +82,23 @@ class HomeViewModel(navController: NavController) : ViewModel() {
 
     fun closeDialogDetail() {
         isShowInfo = false
+    }
+
+    private var revealedItems: List<NoteModel> = emptyList()
+
+    fun isItemRevealed(item: NoteModel): Boolean {
+        return revealedItems.contains(item)
+    }
+
+    fun itemExpanded(item: NoteModel) {
+        revealedItems = revealedItems.toMutableList().also { mutableList ->
+            mutableList.add(item)
+        }
+    }
+
+    fun itemCollapsed(item: NoteModel) {
+        revealedItems = revealedItems.toMutableList().also { mutableList ->
+            mutableList.remove(item)
+        }
     }
 }
